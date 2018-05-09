@@ -12,11 +12,11 @@ const request = require('superagent');
  */
 function getUserData(accessToken, callback) {
   request
-   .get('https://graph.microsoft.com/beta/me')
-   .set('Authorization', 'Bearer ' + accessToken)
-   .end((err, res) => {
-     callback(err, res);
-   });
+    .get('https://graph.microsoft.com/v1.0/me')
+    .set('Authorization', 'Bearer ' + accessToken)
+    .end((err, res) => {
+      callback(err, res);
+    });
 }
 
 /**
@@ -28,12 +28,12 @@ function getProfilePhoto(accessToken, callback) {
   // Get the profile photo of the current user (from the user's mailbox on Exchange Online).
   // This operation in version 1.0 supports only work or school mailboxes, not personal mailboxes.
   request
-   .get('https://graph.microsoft.com/beta/me/photo/$value')
-   .set('Authorization', 'Bearer ' + accessToken)
-   .end((err, res) => {
-     // Returns 200 OK and the photo in the body. If no photo exists, returns 404 Not Found.
-     callback(err, res.body);
-   });
+    .get('https://graph.microsoft.com/v1.0/me/photo/$value')
+    .set('Authorization', 'Bearer ' + accessToken)
+    .end((err, res) => {
+      // Returns 200 OK and the photo in the body. If no photo exists, returns 404 Not Found.
+      callback(err, res.body);
+    });
 }
 
 /**
@@ -45,14 +45,14 @@ function uploadFile(accessToken, file, callback) {
   // This operation only supports files up to 4MB in size.
   // To upload larger files, see `https://developer.microsoft.com/graph/docs/api-reference/v1.0/api/item_createUploadSession`.
   request
-   .put('https://graph.microsoft.com/beta/me/drive/root/children/mypic.jpg/content')
-   .send(file)
-   .set('Authorization', 'Bearer ' + accessToken)
-   .set('Content-Type', 'image/jpg')
-   .end((err, res) => {
-     // Returns 200 OK and the file metadata in the body.
-     callback(err, res.body);
-   });
+    .put('https://graph.microsoft.com/v1.0/me/drive/root/children/mypic.jpg/content')
+    .send(file)
+    .set('Authorization', 'Bearer ' + accessToken)
+    .set('Content-Type', 'image/jpg')
+    .end((err, res) => {
+      // Returns 200 OK and the file metadata in the body.
+      callback(err, res.body);
+    });
 }
 
 /**
@@ -64,14 +64,14 @@ function uploadFile(accessToken, file, callback) {
 // See https://developer.microsoft.com/en-us/graph/docs/api-reference/v1.0/api/item_createlink
 function getSharingLink(accessToken, id, callback) {
   request
-   .post('https://graph.microsoft.com/beta/me/drive/items/' + id + '/createLink')
-   .send({ type: 'view' })
-   .set('Authorization', 'Bearer ' + accessToken)
-   .set('Content-Type', 'application/json')
-   .end((err, res) => {
-     // Returns 200 OK and the permission with the link in the body.
-     callback(err, res.body.link);
-   });
+    .post('https://graph.microsoft.com/v1.0/me/drive/items/' + id + '/createLink')
+    .send({ type: 'view' })
+    .set('Authorization', 'Bearer ' + accessToken)
+    .set('Content-Type', 'application/json')
+    .end((err, res) => {
+      // Returns 200 OK and the permission with the link in the body.
+      callback(err, res.body.link);
+    });
 }
 
 /**
@@ -84,20 +84,20 @@ function getSharingLink(accessToken, id, callback) {
  */
 function postSendMail(accessToken, message, callback) {
   request
-   .post('https://graph.microsoft.com/beta/me/sendMail')
-   .send(message)
-   .set('Authorization', 'Bearer ' + accessToken)
-   .set('Content-Type', 'application/json')
-   .set('Content-Length', message.length)
-   .end((err, res) => {
-     // Returns 202 if successful.
-     // Note: If you receive a 500 - Internal Server Error
-     // while using a Microsoft account (outlook.com, hotmail.com or live.com),
-     // it's possible that your account has not been migrated to support this flow.
-     // Check the inner error object for code 'ErrorInternalServerTransientError'.
-     // You can try using a newly created Microsoft account or contact support.
-     callback(err, res);
-   });
+    .post('https://graph.microsoft.com/v1.0/me/sendMail')
+    .send(message)
+    .set('Authorization', 'Bearer ' + accessToken)
+    .set('Content-Type', 'application/json')
+    .set('Content-Length', message.length)
+    .end((err, res) => {
+      // Returns 202 if successful.
+      // Note: If you receive a 500 - Internal Server Error
+      // while using a Microsoft account (outlook.com, hotmail.com or live.com),
+      // it's possible that your account has not been migrated to support this flow.
+      // Check the inner error object for code 'ErrorInternalServerTransientError'.
+      // You can try using a newly created Microsoft account or contact support.
+      callback(err, res);
+    });
 }
 
 exports.getUserData = getUserData;
